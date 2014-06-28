@@ -12,22 +12,34 @@ function PageSlider(container) {
     // Use this function if you want PageSlider to automatically determine the sliding direction based on the state history
     this.slidePage = function(page) {
 
-        var l = stateHistory.length,
+         var l = stateHistory.length,
             state = window.location.hash;
 
         if (l === 0) {
-            stateHistory.push(state);
-            this.slidePageFrom(page);
-            return;
-        }
-        if (state === stateHistory[l-2]) {
-            stateHistory.pop();
-            this.slidePageFrom(page, 'left');
+            if ($.inArray(state, stateHistory) == -1) {
+                stateHistory.push(state);
+                this.slidePageFrom(page);
+                return;
+            }
         } else {
-            stateHistory.push(state);
-            this.slidePageFrom(page, 'right');
+            if ($.inArray(state, stateHistory) == -1) {
+                stateHistory.push(state);
+                this.slidePageFrom(page, 'right');
+                return;
+            } else {
+                if ($.inArray(state, stateHistory) === 0) {
+                    this.slidePageFrom(page, 'left');
+                    return;
+                } else {
+                    if (($.inArray(state, stateHistory) < $.inArray(app.history, stateHistory))) {
+                        this.slidePageFrom(page, 'left');
+                    } else {
+                        this.slidePageFrom(page, 'right');
+                    }
+                }
+            }
         }
-
+        
     };
 
     // Use this function directly if you want to control the sliding direction outside PageSlider
